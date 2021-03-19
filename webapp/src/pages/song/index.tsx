@@ -1,9 +1,26 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { Waveform } from "../../components/waveform";
 
-const backgroundImage = 'https://images.unsplash.com/photo-1525577288853-c6f0a020a162'
+// const backgroundImage = 'https://images.unsplash.com/photo-1525577288853-c6f0a020a162'
+const backgroundImage = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29'
 
 export function SongPage() {
+  const [audioWaveform, setAudioWaveform] = useState<AudioBuffer | undefined>()
   const waveformWrapperDiv = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    var request = new XMLHttpRequest();
+    request.open('GET', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/shoptalk-clip.mp3', true);
+    request.responseType = 'arraybuffer';
+    request.addEventListener('load', function () {
+      var context = new window.AudioContext()
+      context.decodeAudioData(request.response, (buffer) => {
+        setAudioWaveform(buffer)
+      })
+    })
+    request.send()
+  }, [])
+
+  const waveformWrapperDivWidth = waveformWrapperDiv?.current?.getBoundingClientRect().width || 0
   return (
     <div className='w-screen h-screen bg-gray-100'>
       <div className='absolute inset-0 bg-center bg-no-repeat bg-cover'
@@ -54,7 +71,7 @@ export function SongPage() {
               <div
                 className='px-2 py-1 rounded-full shadow'
                 style={{
-                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                  backgroundColor: 'rgba(0, 0, 0, 0.2)',
                   width: 'fit-content',
                 }}
               >
@@ -65,7 +82,7 @@ export function SongPage() {
               <div
                 className='px-2 py-1 rounded-full shadow'
                 style={{
-                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                  backgroundColor: 'rgba(0, 0, 0, 0.2)',
                   width: 'fit-content',
                 }}
               >
@@ -76,7 +93,7 @@ export function SongPage() {
               <div
                 className='px-2 py-1 rounded-full'
                 style={{
-                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                  backgroundColor: 'rgba(0, 0, 0, 0.2)',
                   width: 'fit-content',
                 }}
               >
@@ -91,6 +108,8 @@ export function SongPage() {
           className='mt-8 w-full max-w-3xl'
           ref={waveformWrapperDiv}
         >
+          {audioWaveform && waveformWrapperDivWidth > 0 &&
+            <Waveform waveform={audioWaveform} width={waveformWrapperDivWidth} />}
         </div>
         <div>
 

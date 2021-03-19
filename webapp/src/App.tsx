@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Route, Switch
 } from "react-router-dom";
-import { SongPage } from "./page/song";
+import { SongPage } from "./pages/song";
 
 
 export default function App() {

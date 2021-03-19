@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import Menu from '../menu';
+
 function Header() {
+  const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false);
+
   const connectWallet = () => {
     console.log('connecting wallet...');
+  }
+
+  const renderActionPanel = () => {
+    if (isWalletConnected) {
+      return <Menu />;
+    }
+    return (
+      <button onClick={connectWallet} className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md text-base font-medium text-black bg-gray-50 hover:bg-gray-100">
+        Connect Wallet
+      </button>
+    );
   }
 
   return (
@@ -15,9 +30,7 @@ function Header() {
         </div>
       </Link>
       <div className="flex items-center justify-end flex-1">
-        <button onClick={connectWallet} className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md text-base font-medium text-black bg-gray-50 hover:bg-gray-100">
-          Connect Wallet
-        </button>
+        {renderActionPanel()}
       </div>
     </div>
   );

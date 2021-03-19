@@ -8,6 +8,7 @@ import { SongPage } from "./pages/song";
 import CollectionPage from "./pages/collection";
 import Header from './components/header';
 import { AppContextProvider, useAppContext } from "./components/context/application";
+import { Footer } from "./components/footer";
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ function RootRouter() {
     >
       <Router>
         <Header />
+        <Footer />
         <Switch>
           <Route path="/song">
             <SongPage />

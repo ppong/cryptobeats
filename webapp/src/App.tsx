@@ -19,7 +19,7 @@ export default function App() {
 
 function Home() {
   return (
-    <div>Home</div>
+    <div></div>
   )
 }
 

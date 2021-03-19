@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_USER: "kudos"
+      POSTGRES_PASSWORD: "kudos"
+      POSTGRES_DB: "kudos"
+    ports:
+      - "5432:5432"

@@ -1,0 +1,13 @@
+configmap:
+
+  database:
+    dbname: "cryptobeats"
+    host: "localhost"
+    isMigrationEnabled: true
+    migrationPath: "migration"
+    password: "beets"
+    port: 5432
+    sslMode: "disable"
+    username: "cryptobeats"
+    version: "11.5"
+    maxConnections: 25

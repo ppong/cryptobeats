@@ -11,9 +11,9 @@ function CollectionCard(props: CollectionCardProps) {
   const { albumCover, artist, title, description } = props;
 
   return (
-    <div className="group flex p-6 bg-gray-50 bg-opacity-10 items-center hover:bg-gray-50 transform hover:scale-101 transition duration-300 ease-in-out">
+    <div className="group flex rounded-md p-6 bg-gray-50 bg-opacity-10 items-center cursor-pointer hover:bg-gray-50 transform hover:scale-101 transition duration-300 ease-in-out">
       <div className="flex-none w-36 h-36">
-        <img src={albumCover} alt="album cover" className="w-full h-full object-cover" />
+        <img src={albumCover} alt="album cover" className="w-full h-full object-cover rounded-md" />
       </div>
       <div className="flex-auto ml-6">
         <div className="flex flex-wrap">

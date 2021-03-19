@@ -22,10 +22,10 @@ function Header() {
   }
 
   return (
-    <div className="flex w-full h-20 p-4 items-center">
+    <div className="absolute top-0 flex w-full h-20 p-4 items-center z-10">
       <Link to="/home">
         <div className="flex justify-center items-center">
-          <img className="h-8 w-auto sm:h-10" src="https://logoipsum.com/logo/logo-14.svg" alt="logo"/>
+          <img className="h-8 w-auto sm:h-10" src="https://logoipsum.com/logo/logo-14.svg" alt="logo" />
           <h1 className="text-gray-50 font-bold">Cryptobeats</h1>
         </div>
       </Link>

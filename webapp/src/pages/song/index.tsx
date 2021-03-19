@@ -1,10 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
+import { defaultBackground, useAppContext } from "../../components/context/application";
 import { Waveform } from "../../components/waveform";
 
 // const backgroundImage = 'https://images.unsplash.com/photo-1525577288853-c6f0a020a162'
 const backgroundImage = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29'
 
 export function SongPage() {
+  const { setBackgroundImage } = useAppContext()
+  useEffect(() => {
+    setBackgroundImage(backgroundImage)
+    return () => setBackgroundImage(defaultBackground)
+  })
+
   const [audioWaveform, setAudioWaveform] = useState<AudioBuffer | undefined>()
   const waveformWrapperDiv = useRef<HTMLDivElement>(null)
   useEffect(() => {

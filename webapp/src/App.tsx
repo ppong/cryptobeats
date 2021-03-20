@@ -1,20 +1,29 @@
+import { Web3Provider } from '@ethersproject/providers';
+import { Web3ReactProvider } from '@web3-react/core';
 import React from "react";
 import {
   BrowserRouter as Router,
   Route, Switch
 } from "react-router-dom";
-
-import { SongPage } from "./pages/song";
-import CollectionPage from "./pages/collection";
-import Header from './components/header';
 import { AppContextProvider, useAppContext } from "./components/context/application";
 import { Footer } from "./components/footer";
+import Header from './components/header';
+import CollectionPage from "./pages/collection";
+import { SongPage } from "./pages/song";
+
+function getLibrary(provider: any): Web3Provider {
+  const library = new Web3Provider(provider)
+  library.pollingInterval = 12000
+  return library
+}
 
 export default function App() {
   return (
-    <AppContextProvider>
-      <RootRouter />
-    </AppContextProvider>
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <AppContextProvider>
+        <RootRouter />
+      </AppContextProvider>
+    </Web3ReactProvider>
   );
 }
 

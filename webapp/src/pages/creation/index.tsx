@@ -1,11 +1,106 @@
+import React, { useState } from 'react';
+import { 
+  Zora,
+  constructBidShares,
+  constructMediaData,
+  sha256FromBuffer,
+  generateMetadata,
+  isMediaDataVerified
+} from '@zoralabs/zdk'
+
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+import { useWeb3React } from '@web3-react/core';
+import ipfsCore from 'ipfs-core';
 
 const profilePictureImage = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29'
 const collectibleImage = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29'
 
+const IPFS_URL_PREFIX = "https://ipfs.io/ipfs/";
+
 export function CreationPage() {
+  const [albumCoverFile, setAlbumCoverFile] = useState<string | ArrayBuffer | null>();
+  const [mp3File, setMp3File] = useState<string | ArrayBuffer | null>();
+  const { library } = useWeb3React();
+
+  const generateMp3URL = async() => {
+    const ipfs = await ipfsCore.create();
+    const { cid } = await ipfs.add(mp3File as any);
+    return IPFS_URL_PREFIX + cid.toString();
+  }
+
+  const generateAlbumCoverURL = async() => {
+    const ipfs = await ipfsCore.create();
+    const { cid } = await ipfs.add(albumCoverFile as any);
+    return IPFS_URL_PREFIX + cid.toString();
+  }
+
+  const generateMetadataURL = async(metadataJSON: string) => {
+    const ipfs = await ipfsCore.create();
+    const { cid } = await ipfs.add(metadataJSON);
+    return IPFS_URL_PREFIX + cid.toString();
+  }
+
+  const handleAlbumCover = async(e) => {
+    e.preventDefault();
+
+    const file = e.target.files[0];
+    const reader = new window.FileReader();
+    reader.readAsArrayBuffer(file);
+
+    reader.onloadend = () => {
+      setAlbumCoverFile(reader.result);
+    }
+  }
+
+  const handleMp3 = async(e) => {
+    e.preventDefault();
+
+    const file = e.target.files[0];
+    const reader = new window.FileReader();
+    reader.readAsArrayBuffer(file);
+
+    reader.onloadend = () => {
+      setMp3File(reader.result);
+    }
+  }
+
+  const handleMint = async() => {
+    const ipfs = await ipfsCore.create();
+    const mp3URL = IPFS_URL_PREFIX + (await ipfs.add(mp3File as any)).cid.toString();
+    const albumCoverURL = IPFS_URL_PREFIX + (await ipfs.add(albumCoverFile as any)).cid.toString();
+
+    const signer = library.getSigner();
+    const zora = new Zora(signer, 4)
+    const metadataJSON = generateMetadata('zora-20210101', {
+      description: albumCoverURL,
+      mimeType: 'text/plain',
+      name: '',
+      version: 'zora-20210101',
+    });
+
+    const metadataURL = IPFS_URL_PREFIX + (await ipfs.add(metadataJSON)).cid.toString();
+    
+    const contentHash = sha256FromBuffer(mp3File as Buffer);
+    const metadataHash = sha256FromBuffer(Buffer.from(metadataJSON))
+    const mediaData = constructMediaData(
+      mp3URL,
+      metadataURL,
+      contentHash,
+      metadataHash
+    );
+
+    console.log(mediaData);
+    
+    const bidShares = constructBidShares(
+      10, // creator share
+      90, // owner share
+      0 // prevOwner share
+    )
+    const tx = await zora.mint(mediaData, bidShares)
+    await tx.wait(8)
+  }
+
   return (
     <div
       className='absolute w-screen h-screen flex bg-white z-10'
@@ -31,7 +126,7 @@ export function CreationPage() {
           </div>
 
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700">First name</label>
+            <label className="block text-sm font-medium text-gray-700">Last name</label>
             <input type="text"
               className="mt-1 px-3 py-2 w-full rounded-md border border-gray-300" />
           </div>
@@ -44,7 +139,7 @@ export function CreationPage() {
               <div className="flex text-sm text-gray-600">
                 <label className="relative cursor-pointer bg-white rounded-md font-medium text-gray-900 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                   <span>Upload Albumn Cover</span>
-                  <input id="file-upload" name="file-upload" type="file" className="sr-only" />
+                  <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleAlbumCover}/>
                 </label>
                 <p className="pl-1">or drag and drop</p>
               </div>
@@ -62,7 +157,7 @@ export function CreationPage() {
               <div className="flex text-sm text-gray-600">
                 <label className="relative cursor-pointer bg-white rounded-md font-medium text-gray-900 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                   <span>Upload Audio File</span>
-                  <input id="file-upload" name="file-upload" type="file" className="sr-only" />
+                  <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleMp3}/>
                 </label>
                 <p className="pl-1">or drag and drop</p>
               </div>
@@ -72,7 +167,7 @@ export function CreationPage() {
             </div>
           </div>
 
-          <button className='mt-8 px-3 py-3 w-full rounded-full bg-black text-white shadow'>
+          <button onClick={handleMint} className='mt-8 px-3 py-3 w-full rounded-full bg-black text-white shadow'>
             Create
           </button>
         </div>

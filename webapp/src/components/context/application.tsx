@@ -4,8 +4,9 @@ export const defaultBackground = 'https://images.unsplash.com/photo-156998217597
 
 interface IAppContext {
   title: string
+  artist: string
   subTitle?: string
-  setTitle: (title: string, subTitle?: string) => void
+  setTrack: (title: string, artist: string, subTitle?: string) => void
   backgroundImage: string
   setBackgroundImage: (background: string) => void
 }
@@ -19,16 +20,20 @@ interface IAppContextProviderProps {
 export function AppContextProvider(props: IAppContextProviderProps) {
   const [backgroundImage, setBackgroundImage] = useState(defaultBackground)
   const [title, setTitle] = useState('Cryptobeats')
+  const [artist, setArtist] = useState<string>('test artist');
   const [subTitle, setSubTitle] = useState<string | undefined>()
-  const handleSetTitle = (title: string, subTitle?: string) => {
+
+  const handleSetTrack = (title: string, artist: string, subTitle?: string) => {
     setTitle(title)
     setSubTitle(subTitle)
+    setArtist(artist)
   }
 
   const appContext = {
     title: title,
+    artist: artist,
     subTitle: subTitle,
-    setTitle: handleSetTitle,
+    setTrack: handleSetTrack,
     backgroundImage,
     setBackgroundImage,
   }

@@ -1,25 +1,22 @@
 package main
 
 import (
-	"cryptobeats.xyz/pkg/config"
-	"cryptobeats.xyz/pkg/database"
-	"cryptobeats.xyz/server"
 	"flag"
+
+	"cryptobeats.xyz/pkg"
+	"cryptobeats.xyz/repository"
+	"cryptobeats.xyz/server"
 	"go.uber.org/fx"
 )
 
 func main() {
-
 	configFile := flag.String("config", "config/config.yaml", "config file")
 	flag.Parse()
 
 	app := fx.New(
-		fx.Provide(
-			func() *config.Config { return config.NewConfig(*configFile) },
-			database.NewDatabase,
-		),
+		pkg.Module(*configFile),
+		repository.Module(),
 		fx.Invoke(server.NewAppServer))
 	app.Run()
 	<-app.Done()
 }
-

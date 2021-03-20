@@ -1,12 +1,15 @@
 import { formatEther } from '@ethersproject/units';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
+import { CreationPage } from '../../pages/creation';
+import { Modal } from '../modal';
 
 function Menu() {
   const { account, library } = useWeb3React()
 
   const [isUserMenuActive, setIsUserMenuActive] = useState<boolean>(false);
   const [balance, setBalance] = useState<string>();
+  const [showCreationModal, setShowCreationModal] = useState(false);
 
   useEffect((): any => {
     if (!account || !library) { return }
@@ -29,7 +32,10 @@ function Menu() {
   return (
     <div>
       <div className="ml-4 flex items-center md:ml-6">
-        <button className="bg-gray-50 p-1 rounded-full text-gray-500 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+        <button
+          className="bg-gray-50 p-1 rounded-full text-gray-500 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+          onClick={() => setShowCreationModal(true)}
+        >
           <span className="sr-only">View notifications</span>
           <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -59,6 +65,10 @@ function Menu() {
           )}
         </div>
       </div>
+      {showCreationModal &&
+        <Modal>
+          <CreationPage />
+        </Modal>}
     </div>
   );
 }

@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 
+	"cryptobeats.xyz/service"
+
 	"cryptobeats.xyz/pkg"
 	"cryptobeats.xyz/repository"
 	"cryptobeats.xyz/server"
@@ -16,6 +18,7 @@ func main() {
 	app := fx.New(
 		pkg.Module(*configFile),
 		repository.Module(),
+		service.Module(),
 		fx.Invoke(server.NewAppServer))
 	app.Run()
 	<-app.Done()

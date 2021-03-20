@@ -8,7 +8,9 @@ import {
 import { AppContextProvider, useAppContext } from "./components/context/application";
 import { Footer } from "./components/footer";
 import Header from './components/header';
+import { Modal } from './components/modal';
 import CollectionPage from "./pages/collection";
+import { CreationPage } from './pages/creation';
 import { SongPage } from "./pages/song";
 
 function getLibrary(provider: any): Web3Provider {
@@ -57,6 +59,9 @@ function RootRouter() {
           </Route>
         </Switch>
       </Router>
+      {/* <Modal>
+        <CreationPage />
+      </Modal> */}
     </div>
   )
 }

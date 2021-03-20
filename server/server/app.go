@@ -4,6 +4,10 @@ import (
 	"context"
 	"net/http"
 
+	"cryptobeats.xyz/service/collectible"
+	"cryptobeats.xyz/service/playlist"
+	"cryptobeats.xyz/service/user"
+
 	"cryptobeats.xyz/pkg/config"
 	"cryptobeats.xyz/pkg/logger"
 	"github.com/gorilla/mux"
@@ -20,12 +24,23 @@ type AppServer struct {
 func NewAppServer(
 	lc fx.Lifecycle,
 	config *config.Config,
+	collectibleService *collectible.Service,
+	playlistService *playlist.Service,
+	userService *user.Service,
 ) *AppServer {
 	address := "localhost:8080"
 	router := mux.NewRouter()
 
 	// health check
 	router.HandleFunc("/", healthCheck)
+
+	apiRouter := router.PathPrefix("/api").Subrouter()
+	//apiRouter.Use(csrfMiddleware.Handle, contextMiddleware.GetAuthenticatedRequestContext)
+	apiRouter.HandleFunc("/login", userService.HandleSignInOrSignUp).Methods(http.MethodPost)
+	apiRouter.HandleFunc("/user", userService.HandleUpdateUser).Methods(http.MethodPost)
+	apiRouter.HandleFunc("/user/me", userService.HandleGetCurrentUser).Methods(http.MethodGet)
+	apiRouter.HandleFunc("/playlist/default", playlistService.HandleGetDefaultPlaylist).Methods(http.MethodGet)
+	apiRouter.HandleFunc("/collectible", collectibleService.HandleCreateCollectible).Methods(http.MethodPost)
 
 	server := &AppServer{
 		config: config,

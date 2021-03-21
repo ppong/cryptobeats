@@ -1,4 +1,5 @@
-import React from "react";
+import { gql, useQuery } from "@apollo/client";
+import React, { useEffect, useState } from "react";
 import CollectionCard from "../../components/collection.card";
 import { Track } from "../../components/context/application";
 
@@ -33,9 +34,49 @@ export const mockData: Track[] = [
   },
 ];
 
+const ExampleGraphqlQuery = gql`
+{
+  user(id: "0xdeed78eea3999c5f2ac2f344de9f459a2f0b10c2") {
+    collection {
+      id
+      creator {
+        id
+      }
+      contentURI
+      metadataURI
+    }
+  }
+}`
+
 function CollectionPage() {
+  const { loading, error, data } = useQuery(ExampleGraphqlQuery);
+  const [tracks, setTracks] = useState<Track[]>([])
+
+  useEffect(() => {
+    const promises: Promise<any>[] = data.user.collection.map((collectible) => {
+      return fetch(collectible.metadataURI).then((res) => res.json())
+    })
+    Promise.all(promises).then((rawMetadata) => {
+      const tracks: Track[] = rawMetadata.map((metadata, index) => {
+        debugger
+        return {
+          albumCoverUrl: metadata.body.artwork?.info?.uri,
+          artist: metadata.body.artist,
+          description: metadata.body.notes,
+          title: metadata.body.title,
+          mediaUrl: data.user.collection[index].contentURI
+        }
+      })
+      setTracks(tracks)
+    })
+  }, [data])
+
+  if (loading || error || tracks.length === 0) {
+    return null
+  }
+
   const renderCollectionCards = () => {
-    return mockData.map((track, index) => {
+    return tracks.map((track, index) => {
       // TODO: add ID later
       return (
         <CollectionCard

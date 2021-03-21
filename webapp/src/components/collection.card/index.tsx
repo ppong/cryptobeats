@@ -12,6 +12,7 @@ function CollectionCard(props: CollectionCardProps) {
   const history = useHistory()
   const { isPlaying, togglePlayback, track, setTrack } = useAppContext();
   const { title, artist, description, albumCoverUrl } = props.track;
+
   const [isMouseHover, setIsMoseHover] = useState(false)
   const handleSetTrack = (event) => {
     event.stopPropagation()

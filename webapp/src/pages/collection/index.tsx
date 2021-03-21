@@ -36,7 +36,7 @@ export const mockData: Track[] = [
 
 const ExampleGraphqlQuery = gql`
 {
-  user(id: "0xdeed78eea3999c5f2ac2f344de9f459a2f0b10c2") {
+  user(id: "0x47fb2aa5a070ded6f6e2414c601d7a80532dbb17") {
     collection {
       id
       creator {
@@ -53,21 +53,24 @@ function CollectionPage() {
   const [tracks, setTracks] = useState<Track[]>([])
 
   useEffect(() => {
+    if (!data) { return }
     const promises: Promise<any>[] = data.user.collection.map((collectible) => {
       return fetch(collectible.metadataURI).then((res) => res.json())
     })
     Promise.all(promises).then((rawMetadata) => {
       const tracks: Track[] = rawMetadata.map((metadata, index) => {
-        debugger
         return {
-          albumCoverUrl: metadata.body.artwork?.info?.uri,
-          artist: metadata.body.artist,
-          description: metadata.body.notes,
-          title: metadata.body.title,
+          albumCoverUrl: metadata.body?.artwork?.info?.uri,
+          artist: metadata.body?.artist,
+          description: metadata.body?.notes,
+          title: metadata.body?.title,
           mediaUrl: data.user.collection[index].contentURI
         }
       })
-      setTracks(tracks)
+      const validTracks = tracks.filter((track) => {
+        return track.albumCoverUrl && track.mediaUrl
+      })
+      setTracks(validTracks)
     })
   }, [data])
 

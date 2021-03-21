@@ -4,8 +4,8 @@ import { ApolloProvider } from '@apollo/client';
 
 export const defaultBackground = 'https://images.unsplash.com/photo-1569982175971-d92b01cf8694?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'
 
-// const graphqlUri = 'https://api.thegraph.com/subgraphs/name/ourzora/zora-v1-rinkeby'
-const graphqlUri = 'https://api.thegraph.com/subgraphs/name/ourzora/zora-v1'
+const graphqlUri = 'https://api.thegraph.com/subgraphs/name/ourzora/zora-v1-rinkeby'
+// const graphqlUri = 'https://api.thegraph.com/subgraphs/name/ourzora/zora-v1'
 const client = new ApolloClient({
   uri: graphqlUri,
   cache: new InMemoryCache()

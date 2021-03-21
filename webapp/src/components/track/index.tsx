@@ -16,7 +16,7 @@ export function getTracksFromCollectibles(collectibles: any): Promise<Track[]> {
             }
         })
         return tracks.filter((track) => {
-            return track.albumCoverUrl && track.mediaUrl
+            return track.albumCoverUrl && track.mediaUrl && track.title !== 'Marcel Oneil'
         })
     })
 }

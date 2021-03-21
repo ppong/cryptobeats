@@ -5,7 +5,6 @@ import {
   constructMediaData,
   sha256FromBuffer,
   generateMetadata,
-  isMediaDataVerified
 } from '@zoralabs/zdk'
 
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
@@ -18,20 +17,52 @@ const collectibleImage = 'https://images.unsplash.com/photo-1501594907352-04cda3
 
 const IPFS_URL_PREFIX = "https://ipfs.io/ipfs/";
 
+let ipfs: any = null;
+
+const arrayBufferToBufferCycle = (ab) => {
+  var buffer = new Buffer(ab.byteLength);
+  var view = new Uint8Array(ab);
+  for (var i = 0; i < buffer.length; ++i) {
+      buffer[i] = view[i];
+  }
+  return buffer;
+}
+
 export function CreationPage() {
   const [albumCoverFile, setAlbumCoverFile] = useState<string | ArrayBuffer | null>();
   const [mp3File, setMp3File] = useState<string | ArrayBuffer | null>();
+  const [title, setTitle] = useState('');
+  const [artist, setArtist] = useState('');
+  const [description, setDescription] = useState('');
+
   const { library } = useWeb3React();
 
-  const handleAlbumCover = async (e) => {
+  const handleDescription = e => {
+    const newDescription = e.target.value;
+    setDescription(newDescription);
+  }
+
+  const handleTitle = e => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+  }
+
+  const handleArtist = e => {
+    const newArtist = e.target.value;
+    setArtist(newArtist);
+  }
+
+  const handleAlbumCover = async(e) => {
     e.preventDefault();
 
     const file = e.target.files[0];
-    const reader = new window.FileReader();
-    reader.readAsArrayBuffer(file);
 
+    const reader = new window.FileReader();
+
+    reader.readAsArrayBuffer(file);
     reader.onloadend = () => {
       setAlbumCoverFile(reader.result);
+      console.log('image done loading');
     }
   }
 
@@ -44,11 +75,15 @@ export function CreationPage() {
 
     reader.onloadend = () => {
       setMp3File(reader.result);
+      console.log(reader.result);
+      console.log('mp3 done loading');
     }
   }
 
-  const handleMint = async () => {
-    const ipfs = await ipfsCore.create();
+  const handleMint = async() => {
+    if (!ipfs) {
+      ipfs = await ipfsCore.create();
+    }
     const mp3URL = IPFS_URL_PREFIX + (await ipfs.add(mp3File as any)).cid.toString();
     const albumCoverURL = IPFS_URL_PREFIX + (await ipfs.add(albumCoverFile as any)).cid.toString();
 
@@ -56,11 +91,11 @@ export function CreationPage() {
     const zora = new Zora(signer, 4)
     const metadataJSON = generateMetadata('catalog-20210202', {
       body: {
-        version: 'catalog-20210202',
-        title: 'Marcel Oneil',
-        artist: 'Marcel Oneil',
-        notes: null,
-        duration: 69.69,
+        version: 'catalog-20210202',  
+        title,
+        artist,
+        notes: description,
+        duration: 1,
         mimeType: 'audio/aiff',
         trackNumber: null,
         project: null,
@@ -78,8 +113,7 @@ export function CreationPage() {
     });
 
     const metadataURL = IPFS_URL_PREFIX + (await ipfs.add(metadataJSON)).cid.toString();
-
-    const contentHash = sha256FromBuffer(Buffer.from(mp3File?.toString() as string));
+    const contentHash = sha256FromBuffer(arrayBufferToBufferCycle(mp3File));
     const metadataHash = sha256FromBuffer(Buffer.from(metadataJSON))
     const mediaData = constructMediaData(
       mp3URL,
@@ -87,7 +121,6 @@ export function CreationPage() {
       contentHash,
       metadataHash
     );
-
     console.log(mediaData);
 
     const bidShares = constructBidShares(
@@ -120,15 +153,33 @@ export function CreationPage() {
           </div>
 
           <div className="mt-8">
-            <label className="block text-sm font-medium text-gray-700">First name</label>
-            <input type="text"
-              className="mt-1 px-3 py-2 w-full rounded-md border border-gray-300" />
+            <label className="block text-sm font-medium text-gray-700">Title</label>
+            <input 
+              type="text"
+              className="mt-1 px-3 py-2 w-full rounded-md border border-gray-300"
+              value={title}
+              onChange={handleTitle}
+            />
           </div>
 
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700">Last name</label>
-            <input type="text"
-              className="mt-1 px-3 py-2 w-full rounded-md border border-gray-300" />
+            <label className="block text-sm font-medium text-gray-700">Artist</label>
+            <input
+              type="text"
+              className="mt-1 px-3 py-2 w-full rounded-md border border-gray-300"
+              value={artist}
+              onChange={handleArtist}
+            />
+          </div>
+
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <input
+              type="text"
+              className="mt-1 px-3 py-2 w-full rounded-md border border-gray-300"
+              value={description}
+              onChange={handleDescription}
+            />
           </div>
 
           <div className="mt-4 max-w-lg flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border rounded-md">
@@ -138,8 +189,8 @@ export function CreationPage() {
               </svg>
               <div className="flex text-sm text-gray-600">
                 <label className="relative cursor-pointer bg-white rounded-md font-medium text-gray-900 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                  <span>Upload Albumn Cover</span>
-                  <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleAlbumCover} />
+                  <span>Upload Album Cover</span>
+                  <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleAlbumCover}/>
                 </label>
                 <p className="pl-1">or drag and drop</p>
               </div>
@@ -148,7 +199,6 @@ export function CreationPage() {
               </p>
             </div>
           </div>
-
           <div className="mt-4 max-w-lg flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border rounded-md">
             <div className="space-y-1 text-center">
               <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">

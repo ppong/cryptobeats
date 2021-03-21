@@ -52,7 +52,7 @@ function CollectionPage() {
   const [tracks, setTracks] = useState<Track[]>([])
 
   useEffect(() => {
-    if (!data) { return }
+    if (!data?.user?.collection) { return }
     getTracksFromCollectibles(data.user.collection).then(tracks => {
       setTracks(tracks)
     })

@@ -27,7 +27,7 @@ function Profile() {
   const [tracks, setTracks] = useState<Track[]>([])
 
   useEffect(() => {
-    if (!data?.user) { return }
+    if (!data?.user?.creations) { return }
     getTracksFromCollectibles(data.user.creations).then(tracks => {
       setTracks(tracks)
     })

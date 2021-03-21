@@ -1,6 +1,7 @@
 import { formatEther } from '@ethersproject/units';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { CreationPage } from '../../pages/creation';
 import { Modal } from '../modal';
 
@@ -58,7 +59,7 @@ function Menu() {
                   {balance ? `${formatEther(balance)} ETH` : ''}
                 </p>
               </div>
-              <div className="block px-4 py-2 w-full text-sm text-left text-gray-700 hover:bg-gray-100">Your Profile</div>
+              <Link to="/profile" className="block px-4 py-2 w-full text-sm text-left text-gray-700 hover:bg-gray-100">Your Profile</Link>
               <div className="block px-4 py-2 w-full text-sm text-left text-gray-700 hover:bg-gray-100">Help Center</div>
               <div className="block px-4 py-2 w-full text-sm text-left text-gray-700 hover:bg-gray-100">Disconnect Wallet</div>
             </div>

@@ -23,24 +23,6 @@ export function CreationPage() {
   const [mp3File, setMp3File] = useState<string | ArrayBuffer | null>();
   const { library } = useWeb3React();
 
-  const generateMp3URL = async() => {
-    const ipfs = await ipfsCore.create();
-    const { cid } = await ipfs.add(mp3File as any);
-    return IPFS_URL_PREFIX + cid.toString();
-  }
-
-  const generateAlbumCoverURL = async() => {
-    const ipfs = await ipfsCore.create();
-    const { cid } = await ipfs.add(albumCoverFile as any);
-    return IPFS_URL_PREFIX + cid.toString();
-  }
-
-  const generateMetadataURL = async(metadataJSON: string) => {
-    const ipfs = await ipfsCore.create();
-    const { cid } = await ipfs.add(metadataJSON);
-    return IPFS_URL_PREFIX + cid.toString();
-  }
-
   const handleAlbumCover = async(e) => {
     e.preventDefault();
 
@@ -72,16 +54,32 @@ export function CreationPage() {
 
     const signer = library.getSigner();
     const zora = new Zora(signer, 4)
-    const metadataJSON = generateMetadata('zora-20210101', {
-      description: albumCoverURL,
-      mimeType: 'text/plain',
-      name: '',
-      version: 'zora-20210101',
+    const metadataJSON = generateMetadata('catalog-20210202', {
+      body: {
+        version: 'catalog-20210202',  
+        title: 'Marcel Oneil',
+        artist: 'Marcel Oneil',
+        notes: null,
+        duration: 69.69,
+        mimeType: 'audio/aiff',
+        trackNumber: null,
+        project: null,
+        artwork: {
+          isNft: false,
+          info: {
+            uri: albumCoverURL,
+            mimeType: 'image/jpeg'
+          },
+          nft: null
+        },
+        visualizer: null,
+      },
+      origin: null
     });
 
     const metadataURL = IPFS_URL_PREFIX + (await ipfs.add(metadataJSON)).cid.toString();
     
-    const contentHash = sha256FromBuffer(mp3File as Buffer);
+    const contentHash = sha256FromBuffer(Buffer.from(mp3File?.toString() as string));
     const metadataHash = sha256FromBuffer(Buffer.from(metadataJSON))
     const mediaData = constructMediaData(
       mp3URL,

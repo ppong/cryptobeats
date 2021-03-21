@@ -4,10 +4,11 @@ go 1.16
 
 require (
 	github.com/containerd/containerd v1.4.4 // indirect
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/docker v20.10.5+incompatible // indirect
-	github.com/ethereum/go-ethereum v1.10.1 // indirect
+	github.com/ethereum/go-ethereum v1.10.1
+	github.com/gofrs/uuid v3.3.0+incompatible
 	github.com/gorilla/mux v1.8.0
 	github.com/gotestyourself/gotestyourself v2.2.0+incompatible // indirect
 	github.com/jmoiron/sqlx v1.3.1
@@ -20,5 +21,4 @@ require (
 	golang.org/x/lint v0.0.0-20201208152925-83fdc39ff7b5 // indirect
 	golang.org/x/tools v0.1.0 // indirect
 	gopkg.in/guregu/null.v3 v3.5.0
-	gotest.tools v2.2.0+incompatible // indirect
 )

@@ -1,9 +1,10 @@
 import { gql, useQuery } from '@apollo/client';
 import { Web3Provider } from '@ethersproject/providers';
-import { Web3ReactProvider } from '@web3-react/core';
+import { useWeb3React, Web3ReactProvider } from '@web3-react/core';
 import React from "react";
 import {
   BrowserRouter as Router,
+  Redirect,
   Route, Switch
 } from "react-router-dom";
 import { AppContextProvider, useAppContext } from "./components/context/application";
@@ -34,6 +35,7 @@ export default function App() {
 }
 
 function RootRouter() {
+  const { account } = useWeb3React()
   const { backgroundImage } = useAppContext()
   return (
     <div
@@ -54,14 +56,20 @@ function RootRouter() {
             <Route path="/song">
               <SongPage />
             </Route>
-            <Route path="/listen">
+            <Route path="/listen/:account">
               <CollectionPage />
             </Route>
-            <Route path="/profile">
+            <Route path="/profile/:account">
               <ProfilePage />
             </Route>
+            <Route path="/listen">
+              <Redirect to={`/listen/${account || '0x47fb2aa5a070ded6f6e2414c601d7a80532dbb17'}`} />
+            </Route>
+            <Route path="/profile">
+              <Redirect to={`/profile/${account || '0x47fb2aa5a070ded6f6e2414c601d7a80532dbb17'}`} />
+            </Route>
             <Route path="/">
-              <CollectionPage />
+              <Redirect to={`/listen/${account || '0x47fb2aa5a070ded6f6e2414c601d7a80532dbb17'}`} />
             </Route>
           </Switch>
         </Router>

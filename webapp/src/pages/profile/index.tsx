@@ -9,19 +9,25 @@ import { CreationsQuery } from '../../graphql/queries';
 import { getTracksFromCollectibles } from '../../components/track';
 import { Track } from '../../components/context/application';
 import MarcelImage from '../../images/marcel.jpeg'
+import { useRouteMatch } from 'react-router-dom';
 
 export const profileImageUrl = MarcelImage
 
+interface IProfilePageParams {
+  account: string
+}
+
 function Profile() {
+  const match = useRouteMatch<IProfilePageParams>()
   const { loading, error, data } = useQuery(CreationsQuery, {
     variables: {
-      'address': '0x47fb2aa5a070ded6f6e2414c601d7a80532dbb17'
+      'address': match.params.account
     }
   })
   const [tracks, setTracks] = useState<Track[]>([])
 
   useEffect(() => {
-    if (!data) { return }
+    if (!data?.user) { return }
     getTracksFromCollectibles(data.user.creations).then(tracks => {
       setTracks(tracks)
     })

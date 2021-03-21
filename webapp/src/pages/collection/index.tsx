@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useState } from "react";
+import { useRouteMatch } from "react-router";
 import CollectionCard from "../../components/collection.card";
 import { Track } from "../../components/context/application";
 import { getTracksFromCollectibles } from "../../components/track";
@@ -37,13 +38,15 @@ export const mockData: Track[] = [
   },
 ];
 
-function CollectionPage() {
-  const { account } = useWeb3React()
+interface ICollectionRouteParams {
+  account: string
+}
 
+function CollectionPage() {
+  const match = useRouteMatch<ICollectionRouteParams>()
   const { loading, error, data } = useQuery(CollectionQuery, {
-    skip: !account,
     variables: {
-      'address': account
+      'address': match.params.account
     }
   });
   const [tracks, setTracks] = useState<Track[]>([])

@@ -16,8 +16,8 @@ function ProfileTrack(props: ProfileTrackProps) {
   const [isMouseHover, setIsMouseHover] = useState(false)
   const handleSetTrack = (event) => {
     event.stopPropagation()
-    if (isPlaying) { togglePlayback() }
-    setTrack(props.track);
+    if (isPlaying && track === props.track) { togglePlayback() }
+    else setTrack(props.track);
   }
 
   const handleNavigateToSongPage = () => {

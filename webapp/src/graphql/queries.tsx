@@ -11,3 +11,14 @@ export const CollectionQuery = gql`
   }
   ${CollectibleFragment}
 `
+
+export const CreationsQuery = gql`
+  query CreationsQuery($address: String!) {
+    user(id: $address) {
+      creations {
+        ...CollectibleFragment
+      }
+    }
+  }
+  ${CollectibleFragment}
+`

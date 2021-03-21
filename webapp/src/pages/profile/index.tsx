@@ -5,28 +5,19 @@ import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import ProfileTrack from '../../components/profile.track';
-
-const CollectionQuery = gql`
-{
-  user(id: "0x47fb2aa5a070ded6f6e2414c601d7a80532dbb17") {
-    collection {
-      id
-      creator {
-        id
-      }
-      contentURI
-      metadataURI
-    }
-  }
-}`
+import { CreationsQuery } from '../../graphql/queries';
 
 function Profile() {
-  const { loading, error, data } = useQuery(CollectionQuery);
+  const { loading, error, data } = useQuery(CreationsQuery, {
+    variables: {
+      'address': '0x47fb2aa5a070ded6f6e2414c601d7a80532dbb17'
+    }
+  });
 
   const renderProfileTracks = () => {
-    return data.user.collection.map((item) => {
+    return data.user.creations.map((item) => {
       const { id, metadataURI } = item;
-      return <ProfileTrack key={id} metadataURI={metadataURI}/>
+      return <ProfileTrack key={id} metadataURI={metadataURI} />
     });
   }
 
@@ -58,7 +49,7 @@ function Profile() {
             <div className='px-2 py-1 text-2xl text-gray-300'>
               Jenny Steel
             </div>
-            <FontAwesomeIcon className="mr-2 text-green-400 text-sm" icon={faCheckCircle}/>
+            <FontAwesomeIcon className="mr-2 text-green-400 text-sm" icon={faCheckCircle} />
           </div>
           <div
             className='mt-1 shadow'

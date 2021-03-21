@@ -9,7 +9,9 @@ import {
 import { AppContextProvider, useAppContext } from "./components/context/application";
 import { Footer } from "./components/footer";
 import Header from './components/header';
+import { Modal } from './components/modal';
 import CollectionPage from "./pages/collection";
+import { CreationPage } from './pages/creation';
 import ProfilePage from './pages/profile';
 import { SongPage } from "./pages/song";
 
@@ -63,6 +65,9 @@ function RootRouter() {
             </Route>
           </Switch>
         </Router>
+        {/* <Modal>
+          <CreationPage />
+        </Modal> */}
       </div>
     </div>
   )

@@ -9,6 +9,8 @@ import { CreationsQuery } from '../../graphql/queries';
 import { getTracksFromCollectibles } from '../../components/track';
 import { Track } from '../../components/context/application';
 
+export const profileImageUrl = 'https://images.unsplash.com/photo-1542931287-023b922fa89b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
+
 function Profile() {
   const { loading, error, data } = useQuery(CreationsQuery, {
     variables: {
@@ -37,7 +39,7 @@ function Profile() {
     <div className="grid grid-cols-2 grid-rows-1 gap-4 p-4 h-full items-center">
       <div className="flex flex-col justify-center">
         <div className="flex justify-center">
-          <img className="h-80 w-80 rounded-full" src="https://images.unsplash.com/photo-1542931287-023b922fa89b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="" />
+          <img className="h-80 w-80 rounded-full" src={profileImageUrl} alt="" />
         </div>
         <div className="flex flex-col justify-center mt-10 items-center">
           <p className="text-base text-gray-300 text-center max-w-sm">Feeling Colors is available now exclusively on SoundCloud. Sign up to my newsletter to...</p>

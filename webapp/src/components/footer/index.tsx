@@ -11,7 +11,7 @@ export function Footer() {
     return null
   }
   return (
-    <div className='absolute bottom-0 w-full'>
+    <div className='absolute bottom-10 w-full'>
       <div className='flex justify-center items-center'>
         <div className='my-16 flex items-center'>
           <div onClick={togglePlayback} className='flex justify-center items-center rounded-full w-16 h-16 border-2 border-gray-50'>

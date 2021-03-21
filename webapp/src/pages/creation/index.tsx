@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import { faImage } from '@fortawesome/free-regular-svg-icons';
+import { faFileImage, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useWeb3React } from '@web3-react/core';
 import {
-  Zora,
   constructBidShares,
   constructMediaData,
-  sha256FromBuffer,
-  generateMetadata,
-} from '@zoralabs/zdk'
 
-import { faPlay } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core';
+  generateMetadata, sha256FromBuffer, Zora
+} from '@zoralabs/zdk';
 import ipfsCore from 'ipfs-core';
+import React, { useState } from 'react';
+import { profileImageUrl } from '../profile';
+
 
 const profilePictureImage = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29'
 const collectibleImage = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29'
@@ -23,13 +24,14 @@ const arrayBufferToBufferCycle = (ab) => {
   var buffer = new Buffer(ab.byteLength);
   var view = new Uint8Array(ab);
   for (var i = 0; i < buffer.length; ++i) {
-      buffer[i] = view[i];
+    buffer[i] = view[i];
   }
   return buffer;
 }
 
 export function CreationPage() {
   const [albumCoverFile, setAlbumCoverFile] = useState<string | ArrayBuffer | null>();
+  const [albumCoverPreview, setAlbumCoverPreview] = useState<string>();
   const [mp3File, setMp3File] = useState<string | ArrayBuffer | null>();
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
@@ -52,7 +54,7 @@ export function CreationPage() {
     setArtist(newArtist);
   }
 
-  const handleAlbumCover = async(e) => {
+  const handleAlbumCover = async (e) => {
     e.preventDefault();
 
     const file = e.target.files[0];
@@ -63,6 +65,12 @@ export function CreationPage() {
     reader.onloadend = () => {
       setAlbumCoverFile(reader.result);
       console.log('image done loading');
+    }
+
+    const previewReader = new window.FileReader();
+    previewReader.readAsDataURL(file)
+    previewReader.onloadend = () => {
+      setAlbumCoverPreview(previewReader.result as string);
     }
   }
 
@@ -80,7 +88,7 @@ export function CreationPage() {
     }
   }
 
-  const handleMint = async() => {
+  const handleMint = async () => {
     if (!ipfs) {
       ipfs = await ipfsCore.create();
     }
@@ -91,7 +99,7 @@ export function CreationPage() {
     const zora = new Zora(signer, 4)
     const metadataJSON = generateMetadata('catalog-20210202', {
       body: {
-        version: 'catalog-20210202',  
+        version: 'catalog-20210202',
         title,
         artist,
         notes: description,
@@ -138,9 +146,9 @@ export function CreationPage() {
     >
       <div className='flex-1 flex justify-center items-center bg-black'>
         <CollectibleCard
-          image={collectibleImage}
-          artist='Mike Shinota'
-          title='Remember the name'
+          image={albumCoverPreview}
+          artist={artist}
+          title={title}
         />
       </div>
       <div className='flex-1 flex justify-center items-center'>
@@ -154,7 +162,7 @@ export function CreationPage() {
 
           <div className="mt-8">
             <label className="block text-sm font-medium text-gray-700">Title</label>
-            <input 
+            <input
               type="text"
               className="mt-1 px-3 py-2 w-full rounded-md border border-gray-300"
               value={title}
@@ -190,7 +198,7 @@ export function CreationPage() {
               <div className="flex text-sm text-gray-600">
                 <label className="relative cursor-pointer bg-white rounded-md font-medium text-gray-900 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                   <span>Upload Album Cover</span>
-                  <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleAlbumCover}/>
+                  <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleAlbumCover} />
                 </label>
                 <p className="pl-1">or drag and drop</p>
               </div>
@@ -227,7 +235,7 @@ export function CreationPage() {
 }
 
 interface ICollectionCardProps {
-  image: string
+  image?: string
   artist: string
   title: string
 }
@@ -236,17 +244,21 @@ export function CollectibleCard(props: ICollectionCardProps) {
   return (
     <div className='w-96'>
       <div className='flex-none w-96 h-96 shadow'>
-        <img
-          className='object-cover w-full h-full'
-          src={image} alt='albumn'
-        />
+        {image ?
+          <img
+            className='object-cover w-full h-full'
+            src={image} alt='albumn'
+          /> :
+          <div className='h-full flex justify-center items-center bg-gray-400'>
+            <FontAwesomeIcon className='text-white' icon={faFileImage} size='6x' />
+          </div>}
       </div>
       <div className='px-4 py-2 flex w-full bg-white'>
         <div className='flex items-center flex-1'>
           <div>
             <img
               className='w-14 h-14 border border-gray-300 rounded-full overflow-hidden shadow object-fit'
-              src={profilePictureImage}
+              src={profileImageUrl}
               alt='profile'
             />
           </div>

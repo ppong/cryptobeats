@@ -1,5 +1,5 @@
 import { faImage } from '@fortawesome/free-regular-svg-icons';
-import { faFileImage, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faFileImage, faPlay, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useWeb3React } from '@web3-react/core';
 import {
@@ -29,7 +29,11 @@ const arrayBufferToBufferCycle = (ab) => {
   return buffer;
 }
 
-export function CreationPage() {
+interface ICreationPageProps {
+  onClose: () => void
+}
+export function CreationPage(props: ICreationPageProps) {
+  const { onClose } = props
   const [albumCoverFile, setAlbumCoverFile] = useState<string | ArrayBuffer | null>();
   const [albumCoverPreview, setAlbumCoverPreview] = useState<string>();
   const [mp3File, setMp3File] = useState<string | ArrayBuffer | null>();
@@ -138,6 +142,7 @@ export function CreationPage() {
     )
     const tx = await zora.mint(mediaData, bidShares)
     await tx.wait(8)
+    onClose()
   }
 
   return (
@@ -151,7 +156,15 @@ export function CreationPage() {
           title={title}
         />
       </div>
-      <div className='flex-1 flex justify-center items-center'>
+      <div className='relative flex-1 flex justify-center items-center'>
+        <div className='absolute top-0 w-full flex justify-end'>
+          <button
+            className='m-4 p-2 rounded-full'
+            onClick={onClose}
+          >
+            <FontAwesomeIcon icon={faTimes} size='lg' />
+          </button>
+        </div>
         <div className='flex flex-col'>
           <div className='text-3xl font-semibold'>
             Create Your Music Collectible
@@ -257,7 +270,7 @@ export function CollectibleCard(props: ICollectionCardProps) {
         <div className='flex items-center flex-1'>
           <div>
             <img
-              className='w-14 h-14 border border-gray-300 rounded-full overflow-hidden shadow object-fit'
+              className='w-14 h-14 border border-gray-300 rounded-full overflow-hidden shadow object-cover'
               src={profileImageUrl}
               alt='profile'
             />

@@ -65,9 +65,6 @@ function RootRouter() {
             </Route>
           </Switch>
         </Router>
-        {/* <Modal>
-          <CreationPage />
-        </Modal> */}
       </div>
     </div>
   )

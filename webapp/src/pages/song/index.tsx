@@ -1,3 +1,5 @@
+import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import { defaultBackground, useAppContext } from "../../components/context/application";
 import { Waveform } from "../../components/waveform";
@@ -7,7 +9,7 @@ import { mockData } from "../collection";
 // const backgroundImage = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29'
 
 export function SongPage() {
-  const { track: selectedTrack, setBackgroundImage } = useAppContext()
+  const { track: selectedTrack, isPlaying, togglePlayback, setBackgroundImage } = useAppContext()
   const track = selectedTrack || mockData[0]
   useEffect(() => {
     if (track?.albumCoverUrl) {
@@ -123,8 +125,10 @@ export function SongPage() {
           {audioWaveform && waveformWrapperDivWidth > 0 &&
             <Waveform waveform={audioWaveform} width={waveformWrapperDivWidth} />}
         </div>
-        <div>
-
+        <div className='mt-8 flex justify-center'>
+          <div onClick={togglePlayback} className='flex justify-center items-center rounded-full w-16 h-16 border-2 border-gray-50'>
+            <FontAwesomeIcon className='text-gray-50' icon={isPlaying ? faPause : faPlay} size='1x' />
+          </div>
         </div>
       </div>
     </div>

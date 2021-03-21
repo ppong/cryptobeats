@@ -1,5 +1,5 @@
 import { formatEther } from '@ethersproject/units';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
@@ -36,7 +36,7 @@ function Menu() {
     <div>
       <div className="ml-4 flex items-center md:ml-6">
         <button
-          className="bg-gray-50 rounded-full h-6 w-6 text-gray-500 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white text-center"
+          className="bg-gray-50 rounded-full h-8 w-8 text-gray-500 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white text-center"
           onClick={() => setShowCreationModal(true)}
         >
           <FontAwesomeIcon icon={faPlus} />
@@ -44,8 +44,10 @@ function Menu() {
 
         <div className="ml-3 relative z-10">
           <div>
-            <button onClick={toggleUserMenu} type="button" className="max-w-xs rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu" aria-expanded="false" aria-haspopup="true">
-              <img className="h-8 w-8 rounded-full" src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/383a8dde-b5da-4c0c-8a82-4b593c2dc66a/profile.svg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210319%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210319T213830Z&X-Amz-Expires=86400&X-Amz-Signature=457c5a46a6227a3e2f947e5de319a0622f7654f09ef1c18fcc38a64f71d5c891&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22profile.svg%22" alt="" />
+            <button onClick={toggleUserMenu} type="button"
+              className="h-8 w-8 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+              id="user-menu" aria-expanded="false" aria-haspopup="true">
+              <FontAwesomeIcon className='text-white h-8 w-8 rounded-full overflow-hidden' icon={faUserCircle} size='3x' />
             </button>
           </div>
           {isUserMenuActive && (
@@ -67,7 +69,9 @@ function Menu() {
       </div>
       {showCreationModal &&
         <Modal>
-          <CreationPage />
+          <CreationPage
+            onClose={() => setShowCreationModal(false)}
+          />
         </Modal>}
     </div>
   );

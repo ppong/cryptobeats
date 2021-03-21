@@ -128,11 +128,11 @@ const paintCanvas = ({
             const withinHover = hoverXCoord >= coordinates[0]
             const alreadyPlayed = i < playingPoint
             if (withinHover) {
-                ctx.fillStyle = alreadyPlayed ? '#ff385c' : '#ff385c'
+                ctx.fillStyle = alreadyPlayed ? '#ffffff' : '#ffffff'
             } else if (alreadyPlayed) {
-                ctx.fillStyle = '#ff385c'
+                ctx.fillStyle = '#ffffff'
             } else {
-                ctx.fillStyle = '#ff385c'
+                ctx.fillStyle = '#ffffff'
             }
             ctx.fill()
         }

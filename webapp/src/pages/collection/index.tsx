@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useState } from "react";
 import CollectionCard from "../../components/collection.card";
 import { Track } from "../../components/context/application";
@@ -37,9 +38,12 @@ export const mockData: Track[] = [
 ];
 
 function CollectionPage() {
+  const { account } = useWeb3React()
+
   const { loading, error, data } = useQuery(CollectionQuery, {
+    skip: !account,
     variables: {
-      'address': '0x47fb2aa5a070ded6f6e2414c601d7a80532dbb17'
+      'address': account
     }
   });
   const [tracks, setTracks] = useState<Track[]>([])
@@ -51,10 +55,7 @@ function CollectionPage() {
     })
   }, [data])
 
-  if (loading || error || tracks.length === 0) {
-    return null
-  }
-
+  const collectionData = tracks.length === 0 ? mockData : tracks
   return (
     <div className='w-screen h-screen flex items-center'>
       <div className='flex w-full h-full'>
@@ -74,7 +75,7 @@ function CollectionPage() {
         </div>
         <div className='flex items-center w-full h-full overflow-x-auto'>
           <div className="flex collection">
-            {tracks.map((track, index) => {
+            {collectionData.map((track, index) => {
               return (
                 <CollectionCard
                   key={index}

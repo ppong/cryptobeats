@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { 
+import {
   Zora,
   constructBidShares,
   constructMediaData,
@@ -23,7 +23,7 @@ export function CreationPage() {
   const [mp3File, setMp3File] = useState<string | ArrayBuffer | null>();
   const { library } = useWeb3React();
 
-  const handleAlbumCover = async(e) => {
+  const handleAlbumCover = async (e) => {
     e.preventDefault();
 
     const file = e.target.files[0];
@@ -35,7 +35,7 @@ export function CreationPage() {
     }
   }
 
-  const handleMp3 = async(e) => {
+  const handleMp3 = async (e) => {
     e.preventDefault();
 
     const file = e.target.files[0];
@@ -47,7 +47,7 @@ export function CreationPage() {
     }
   }
 
-  const handleMint = async() => {
+  const handleMint = async () => {
     const ipfs = await ipfsCore.create();
     const mp3URL = IPFS_URL_PREFIX + (await ipfs.add(mp3File as any)).cid.toString();
     const albumCoverURL = IPFS_URL_PREFIX + (await ipfs.add(albumCoverFile as any)).cid.toString();
@@ -56,7 +56,7 @@ export function CreationPage() {
     const zora = new Zora(signer, 4)
     const metadataJSON = generateMetadata('catalog-20210202', {
       body: {
-        version: 'catalog-20210202',  
+        version: 'catalog-20210202',
         title: 'Marcel Oneil',
         artist: 'Marcel Oneil',
         notes: null,
@@ -78,7 +78,7 @@ export function CreationPage() {
     });
 
     const metadataURL = IPFS_URL_PREFIX + (await ipfs.add(metadataJSON)).cid.toString();
-    
+
     const contentHash = sha256FromBuffer(Buffer.from(mp3File?.toString() as string));
     const metadataHash = sha256FromBuffer(Buffer.from(metadataJSON))
     const mediaData = constructMediaData(
@@ -89,7 +89,7 @@ export function CreationPage() {
     );
 
     console.log(mediaData);
-    
+
     const bidShares = constructBidShares(
       10, // creator share
       90, // owner share
@@ -106,6 +106,8 @@ export function CreationPage() {
       <div className='flex-1 flex justify-center items-center bg-black'>
         <CollectibleCard
           image={collectibleImage}
+          artist='Mike Shinota'
+          title='Remember the name'
         />
       </div>
       <div className='flex-1 flex justify-center items-center'>
@@ -137,7 +139,7 @@ export function CreationPage() {
               <div className="flex text-sm text-gray-600">
                 <label className="relative cursor-pointer bg-white rounded-md font-medium text-gray-900 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                   <span>Upload Albumn Cover</span>
-                  <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleAlbumCover}/>
+                  <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleAlbumCover} />
                 </label>
                 <p className="pl-1">or drag and drop</p>
               </div>
@@ -155,7 +157,7 @@ export function CreationPage() {
               <div className="flex text-sm text-gray-600">
                 <label className="relative cursor-pointer bg-white rounded-md font-medium text-gray-900 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                   <span>Upload Audio File</span>
-                  <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleMp3}/>
+                  <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleMp3} />
                 </label>
                 <p className="pl-1">or drag and drop</p>
               </div>
@@ -176,9 +178,11 @@ export function CreationPage() {
 
 interface ICollectionCardProps {
   image: string
+  artist: string
+  title: string
 }
-function CollectibleCard(props: ICollectionCardProps) {
-  const { image } = props
+export function CollectibleCard(props: ICollectionCardProps) {
+  const { image, artist, title } = props
   return (
     <div className='w-96'>
       <div className='flex-none w-96 h-96 shadow'>
@@ -198,11 +202,11 @@ function CollectibleCard(props: ICollectionCardProps) {
           </div>
           <div className='ml-2'>
             <div className='text-sm text-gray-600 leading-tight'>
-              Mike Shinoda
+              {artist}
             </div>
             <div className='text-lg text-gray-900 leading-tight'>
-              Remember the name
-          </div>
+              {title}
+            </div>
           </div>
         </div>
         <div className='flex-none flex justify-center items-center'>

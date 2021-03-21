@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import CollectionCard from "../../components/collection.card";
 import { Track } from "../../components/context/application";
@@ -61,6 +61,7 @@ function CollectionPage() {
       const validTracks = tracks.filter((track) => {
         return track.albumCoverUrl && track.mediaUrl
       })
+      // setTracks(validTracks.concat(validTracks).concat(validTracks).concat(validTracks))
       setTracks(validTracks)
     })
   }, [data])
@@ -69,37 +70,34 @@ function CollectionPage() {
     return null
   }
 
-  const renderCollectionCards = () => {
-    return tracks.map((track, index) => {
-      // TODO: add ID later
-      return (
-        <CollectionCard
-          key={index}
-          track={track}
-        />
-      )
-    });
-  }
-
   return (
     <div className='w-screen h-screen flex items-center'>
-      <div className='flex'>
-        <div className='ml-8 p-8 flex flex-col flex-none space-y-6'>
+      <div className='flex w-full h-full'>
+        <div className='ml-8 p-8 flex flex-col justify-center flex-none space-y-6'>
+          <a className='text-lg text-white'>
+            Collection
+          </a>
           <a className='text-lg text-gray-300'>
             Likes
-        </a>
-          <a className='text-lg text-white'>
+          </a>
+          <a className='text-lg text-gray-300'>
             Playlists
-        </a>
+          </a>
           <a className='text-lg text-gray-300'>
             Albumns
-        </a>
-          <a className='text-lg text-gray-300'>
-            Recently played
-        </a>
+          </a>
         </div>
-        <div className="px-8 grid grid-cols-3 gap-4 overflow-hidden">
-          {renderCollectionCards()}
+        <div className='flex items-center w-full h-full overflow-x-auto'>
+          <div className="flex collection">
+            {tracks.map((track, index) => {
+              return (
+                <CollectionCard
+                  key={index}
+                  track={track}
+                />
+              )
+            })}
+          </div>
         </div>
       </div>
     </div>

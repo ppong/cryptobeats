@@ -70,16 +70,16 @@ function Header() {
         <NavLink
           className='py-2'
           activeClassName='text-gray-50 border-b-2 border-white'
-          to='/collection'
+          to='/listen'
         >
-          Collection
+          Listen
         </NavLink>
         <NavLink
           className='py-2'
           activeClassName='text-gray-50 border-b-2 border-white'
-          to='/market'
+          to='/discover'
         >
-          Market
+          Discover
         </NavLink>
       </div>
       <div className="flex items-center justify-end">

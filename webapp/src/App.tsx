@@ -52,14 +52,14 @@ function RootRouter() {
             <Route path="/song">
               <SongPage />
             </Route>
-            <Route path="/collection">
+            <Route path="/listen">
               <CollectionPage />
             </Route>
             <Route path="/profile">
               <ProfilePage />
             </Route>
             <Route path="/">
-              <Home />
+              <CollectionPage />
             </Route>
           </Switch>
         </Router>
@@ -67,32 +67,4 @@ function RootRouter() {
     </div>
   )
 }
-
-const ExampleGraphqlQuery = gql`
-{
-  user(id: "0x47fb2aa5a070ded6f6e2414c601d7a80532dbb17") {
-    collection {
-      id
-      creator {
-        id
-      }
-      contentURI
-      metadataURI
-    }
-  }
-}`
-
-function Home() {
-  const { loading, error, data } = useQuery(ExampleGraphqlQuery);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
-
-  return data.user.collection.map((item) => (
-    <div key={item.id}>
-      {JSON.stringify(item, null, 2)}
-    </div>
-  ));
-}
-
 

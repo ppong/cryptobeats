@@ -12,7 +12,6 @@ function CollectionCard(props: CollectionCardProps) {
   const history = useHistory()
   const { isPlaying, togglePlayback, track, setTrack } = useAppContext();
   const { title, artist, description, albumCoverUrl } = props.track;
-
   const [isMouseHover, setIsMoseHover] = useState(false)
   const handleSetTrack = (event) => {
     event.stopPropagation()
@@ -27,10 +26,11 @@ function CollectionCard(props: CollectionCardProps) {
 
   return (
     <div
+      className="m-4 flex rounded-md p-6 bg-gray-50 bg-opacity-10 items-center cursor-pointer hover:bg-gray-50 transform hover:scale-101 transition duration-300 ease-in-out"
       onClick={handleNavigateToSongPage}
       onMouseEnter={() => setIsMoseHover(true)}
       onMouseLeave={() => setIsMoseHover(false)}
-      className="group flex rounded-md p-6 bg-gray-50 bg-opacity-10 items-center cursor-pointer hover:bg-gray-50 transform hover:scale-101 transition duration-300 ease-in-out"
+      style={{ width: 450 }}
     >
       <div
         className="flex justify-center items-center flex-none w-36 h-36 bg-center bg-no-repeat bg-cover"
@@ -46,18 +46,18 @@ function CollectionCard(props: CollectionCardProps) {
             <FontAwesomeIcon className='text-gray-50' icon={isPlaying && track === props.track ? faPause : faPlay} size='1x' />
           </div>}
       </div>
-      <div className="flex-auto ml-6">
-        <div className="flex flex-wrap">
-          <p className="w-full flex-nonetext-sm font-medium text-gray-300 mt-2 group-hover:text-gray-500">
-            {artist}
-          </p>
-          <h1 className="flex-auto truncate text-gray-50 text-xl font-semibold group-hover:text-gray-900">
-            {title}
-          </h1>
+      <div className="ml-6"
+        style={{ width: 240 }}
+      >
+        <div className="text-base text-gray-300 group-hover:text-gray-500">
+          {artist}
         </div>
-        <p className="text-sm text-gray-300 group-hover:text-gray-500">
+        <div className="flex-auto text-gray-50 text-xl font-semibold group-hover:text-gray-900 truncate">
+          {title}
+        </div>
+        <div className="mt-2 text-sm text-gray-300 group-hover:text-gray-500 truncate">
           {description}
-        </p>
+        </div>
       </div>
     </div>
   );

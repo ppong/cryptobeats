@@ -10,3 +10,15 @@
 .button:hover {
   background-color: rgba(255, 255, 255, 0.4);
 }
+
+.collection {
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  height: 500px;
+}
+
+.collection-card {
+  height: 180px;
+}
+

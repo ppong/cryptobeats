@@ -37,8 +37,6 @@ func NewAppServer(
 	apiRouter := router.PathPrefix("/api").Subrouter()
 	//apiRouter.Use(csrfMiddleware.Handle, contextMiddleware.GetAuthenticatedRequestContext)
 	apiRouter.HandleFunc("/login", userService.HandleSignInOrSignUp).Methods(http.MethodPost)
-	apiRouter.HandleFunc("/user", userService.HandleUpdateUser).Methods(http.MethodPost)
-	apiRouter.HandleFunc("/user/me", userService.HandleGetCurrentUser).Methods(http.MethodGet)
 	apiRouter.HandleFunc("/playlist/default", playlistService.HandleGetDefaultPlaylist).Methods(http.MethodGet)
 	apiRouter.HandleFunc("/collectible", collectibleService.HandleCreateCollectible).Methods(http.MethodPost)
 

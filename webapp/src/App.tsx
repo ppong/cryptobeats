@@ -1,20 +1,19 @@
+import { gql, useQuery } from '@apollo/client';
+import { Web3Provider } from '@ethersproject/providers';
+import { Web3ReactProvider } from '@web3-react/core';
 import React from "react";
 import {
   BrowserRouter as Router,
   Route, Switch
 } from "react-router-dom";
-import { Web3Provider } from '@ethersproject/providers';
-import { Web3ReactProvider } from '@web3-react/core';
-
 import { AppContextProvider, useAppContext } from "./components/context/application";
 import { Footer } from "./components/footer";
 import Header from './components/header';
-import { Modal } from './components/modal';
-
 import CollectionPage from "./pages/collection";
-import { CreationPage } from './pages/creation';
-import { SongPage } from "./pages/song";
 import ProfilePage from './pages/profile';
+import { SongPage } from "./pages/song";
+
+
 
 function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider)
@@ -30,12 +29,6 @@ export default function App() {
       </AppContextProvider>
     </Web3ReactProvider>
   );
-}
-
-function Home() {
-  return (
-    <div></div>
-  )
 }
 
 function RootRouter() {
@@ -71,4 +64,32 @@ function RootRouter() {
     </div>
   )
 }
+
+const ExampleGraphqlQuery = gql`
+{
+  user(id: "0x47fb2aa5a070ded6f6e2414c601d7a80532dbb17") {
+    collection {
+      id
+      creator {
+        id
+      }
+      contentURI
+      metadataURI
+    }
+  }
+}`
+
+function Home() {
+  const { loading, error, data } = useQuery(ExampleGraphqlQuery);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
+  return data.user.collection.map((item) => (
+    <div key={item.id}>
+      {JSON.stringify(item, null, 2)}
+    </div>
+  ));
+}
+
 

@@ -1,10 +1,7 @@
 package user
 
 import (
-	"context"
-
 	"cryptobeats.xyz/model"
-
 	"cryptobeats.xyz/repository"
 	"cryptobeats.xyz/service/playlist"
 	"github.com/jmoiron/sqlx"
@@ -28,19 +25,8 @@ func NewUserService(
 	}
 }
 
-func (service *Service) SignInOrSignUp() (*model.User, error) {
-	// if user exists login
-	return nil, nil
-}
-
-func (service *Service) GetCurrentUser(
-	ctx context.Context,
-) (*model.User, error) {
-	return nil, nil
-}
-
-func (service *Service) UpdateUser(
-	ctx context.Context,
+func (service *Service) SignInOrSignUp(
+	input *SignUpOrSignInInput,
 ) (*model.User, error) {
 	return nil, nil
 }

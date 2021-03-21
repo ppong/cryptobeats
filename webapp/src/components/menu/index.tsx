@@ -60,7 +60,7 @@ function Menu() {
                   {balance ? `${formatEther(balance)} ETH` : ''}
                 </p>
               </div>
-              <Link to="/profile" className="block px-4 py-2 w-full text-sm text-left text-gray-700 hover:bg-gray-100">Your Profile</Link>
+              <Link to="/profile" className="block px-4 py-2 w-full text-sm text-left text-gray-700 hover:bg-gray-100">Your Artist Profile</Link>
               <div className="block px-4 py-2 w-full text-sm text-left text-gray-700 hover:bg-gray-100">Help Center</div>
               <div className="block px-4 py-2 w-full text-sm text-left text-gray-700 hover:bg-gray-100">Disconnect Wallet</div>
             </div>

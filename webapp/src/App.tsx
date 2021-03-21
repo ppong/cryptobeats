@@ -40,27 +40,30 @@ function RootRouter() {
         backgroundImage: `url(${backgroundImage})`,
       }}
     >
-      <Router>
-        <Header />
-        <Footer />
-        <Switch>
-          <Route path="/song">
-            <SongPage />
-          </Route>
-          <Route path="/collection">
-            <CollectionPage />
-          </Route>
-          <Route path="/profile">
-            <ProfilePage />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-      </Router>
-      {/*<Modal>
-        <CreationPage />
-      </Modal>*/}
+      <div className='w-full h-full'
+        style={{
+          backdropFilter: 'blur(8px)',
+        }}
+      >
+        <Router>
+          <Header />
+          <Footer />
+          <Switch>
+            <Route path="/song">
+              <SongPage />
+            </Route>
+            <Route path="/collection">
+              <CollectionPage />
+            </Route>
+            <Route path="/profile">
+              <ProfilePage />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </Router>
+      </div>
     </div>
   )
 }

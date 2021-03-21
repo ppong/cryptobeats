@@ -1,22 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import { defaultBackground, useAppContext } from "../../components/context/application";
 import { Waveform } from "../../components/waveform";
+import { mockData } from "../collection";
 
 // const backgroundImage = 'https://images.unsplash.com/photo-1525577288853-c6f0a020a162'
-const backgroundImage = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29'
+// const backgroundImage = 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29'
 
 export function SongPage() {
-  const { setBackgroundImage } = useAppContext()
+  const { track: selectedTrack, setBackgroundImage } = useAppContext()
+  const track = selectedTrack || mockData[0]
   useEffect(() => {
-    setBackgroundImage(backgroundImage)
+    if (track?.albumCoverUrl) {
+      setBackgroundImage(track?.albumCoverUrl)
+    }
     return () => setBackgroundImage(defaultBackground)
-  })
+  }, [track])
 
   const [audioWaveform, setAudioWaveform] = useState<AudioBuffer | undefined>()
   const waveformWrapperDiv = useRef<HTMLDivElement>(null)
   useEffect(() => {
+    if (!track) { return }
     var request = new XMLHttpRequest();
-    request.open('GET', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/shoptalk-clip.mp3', true);
+    request.open('GET', track!.mediaUrl, true);
     request.responseType = 'arraybuffer';
     request.addEventListener('load', function () {
       var context = new window.AudioContext()
@@ -25,14 +30,14 @@ export function SongPage() {
       })
     })
     request.send()
-  }, [])
+  }, [track])
 
   const waveformWrapperDivWidth = waveformWrapperDiv?.current?.getBoundingClientRect().width || 0
   return (
     <div className='w-screen h-screen bg-gray-100'>
       <div className='absolute inset-0 bg-center bg-no-repeat bg-cover'
         style={{
-          backgroundImage: `url(${backgroundImage})`,
+          backgroundImage: `url(${track?.albumCoverUrl})`,
         }}
       >
       </div>
@@ -45,7 +50,7 @@ export function SongPage() {
           <div className='flex-none w-48 h-48 shadow'>
             <img
               className='object-cover w-full h-full'
-              src={backgroundImage} alt='albumn'
+              src={track?.albumCoverUrl} alt='albumn'
             />
           </div>
           <div className='ml-6'>
@@ -57,7 +62,7 @@ export function SongPage() {
               }}
             >
               <div className='px-2 py-1 text-sm text-gray-400'>
-                Jeremy Steel
+                {track?.artist}
               </div>
             </div>
             <div
@@ -68,12 +73,12 @@ export function SongPage() {
               }}
             >
               <div className='px-2 py-1 text-2xl text-gray-300'>
-                Feeling Colors live @ Sandhill
+                {track?.title}
               </div>
             </div>
             <div className='mt-4 px-2 text-gray-300'>
-              In a dream collaboration with electronic mastermind Fiftyfivethousand and Jenny Steel rocks the show at...
-              </div>
+              {track?.description}
+            </div>
             <div className='mt-4 flex space-x-2'>
               <div
                 className='px-2 py-1 rounded-full shadow'
@@ -83,7 +88,7 @@ export function SongPage() {
                 }}
               >
                 <div className='text-sm text-gray-300'>
-                  #Electric
+                  #Crypto
                 </div>
               </div>
               <div
@@ -94,8 +99,8 @@ export function SongPage() {
                 }}
               >
                 <div className='text-sm text-gray-300'>
-                  #Jenny Steel
-                  </div>
+                  #{track?.artist}
+                </div>
               </div>
               <div
                 className='px-2 py-1 rounded-full'
@@ -105,7 +110,7 @@ export function SongPage() {
                 }}
               >
                 <div className='text-sm text-gray-300'>
-                  #California
+                  #Zora
                 </div>
               </div>
             </div>

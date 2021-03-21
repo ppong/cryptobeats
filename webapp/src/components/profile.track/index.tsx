@@ -1,49 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { Track, useAppContext } from '../context/application';
 
 type ProfileTrackProps = {
-  metadataURI: string;
+  track: Track;
 }
 
-const getData = (url: string) => fetch(url)
-  .then(response => response.json())
-  .then(data => data);
-
 function ProfileTrack(props: ProfileTrackProps) {
-  const [title, setTitle] = useState('');
-  const [artist, setArtist] = useState('');
-  const [duration, setDuration] = useState(-1);
-  const [artwork, setArtwork] = useState('');
-  const [isSucces, setIsSuccess] = useState(false);
+  const history = useHistory()
+  const { isPlaying, togglePlayback, track, setTrack } = useAppContext();
+  const { title, artist, duration, albumCoverUrl } = props.track;
 
-  const { metadataURI } = props;
+  const [isMouseHover, setIsMouseHover] = useState(false)
+  const handleSetTrack = (event) => {
+    event.stopPropagation()
+    if (isPlaying) { togglePlayback() }
+    setTrack(props.track);
+  }
 
-  useEffect(() => {
-    async function getTrackData(){
-      fetch(metadataURI)
-        .then(response => response.json())
-        .then(data => {
-          const {body} = data;
-          if (body) {
-            const { title, artist, artwork, duration } = body;
-            setIsSuccess(true);
-            setTitle(title);
-            setArtist(artist);
-            setArtwork(artwork.info.uri);
-            setDuration(duration);
-          }
-        });
-    }
-    getTrackData();
-  }, [metadataURI]);
-
-  if (!isSucces) {
-    return <></>;
+  const handleNavigateToSongPage = () => {
+    setTrack(props.track);
+    history.push({ pathname: '/song' })
   }
 
   return (
-    <div className="flex h-auto w-full p-4 items-center max-w-lg">
-      <div className="w-16 h-16">
-        <img src={artwork} alt="album cover" className="w-full h-full object-cover rounded-md" />
+    <div
+      onClick={handleNavigateToSongPage}
+      onMouseEnter={() => setIsMouseHover(true)}
+      onMouseLeave={() => setIsMouseHover(false)}
+      className="flex h-auto w-full p-4 items-center max-w-lg"
+    >
+      <div
+        className="flex justify-center items-center flex-none w-16 h-16 bg-center bg-no-repeat bg-cover"
+        style={{
+          backgroundImage: `url(${albumCoverUrl})`
+        }}
+      >
+        {isMouseHover &&
+          <div
+            className='flex justify-center items-center rounded-full w-8 h-8 border-2 border-gray-50'
+            onClick={handleSetTrack}
+          >
+            <FontAwesomeIcon className='text-gray-50' icon={isPlaying && track === props.track ? faPause : faPlay} size='1x' />
+          </div>}
       </div>
       <div className="flex flex-1 flex-col w-auto ml-4">
         <div className="text-sm text-gray-300">

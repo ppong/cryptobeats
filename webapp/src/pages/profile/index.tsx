@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
 
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
@@ -6,18 +6,27 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import ProfileTrack from '../../components/profile.track';
 import { CreationsQuery } from '../../graphql/queries';
+import { getTracksFromCollectibles } from '../../components/track';
+import { Track } from '../../components/context/application';
 
 function Profile() {
   const { loading, error, data } = useQuery(CreationsQuery, {
     variables: {
       'address': '0x47fb2aa5a070ded6f6e2414c601d7a80532dbb17'
     }
-  });
+  })
+  const [tracks, setTracks] = useState<Track[]>([])
+
+  useEffect(() => {
+    if (!data) { return }
+    getTracksFromCollectibles(data.user.creations).then(tracks => {
+      setTracks(tracks)
+    })
+  }, [data])
 
   const renderProfileTracks = () => {
-    return data.user.creations.map((item) => {
-      const { id, metadataURI } = item;
-      return <ProfileTrack key={id} metadataURI={metadataURI} />
+    return tracks.map((track, index) => {
+      return <ProfileTrack key={index} track={track} />
     });
   }
 

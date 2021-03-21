@@ -12,7 +12,8 @@ function CollectionCard(props: CollectionCardProps) {
   const history = useHistory()
   const { isPlaying, togglePlayback, track, setTrack } = useAppContext();
   const { title, artist, description, albumCoverUrl } = props.track;
-  const [isMouseHover, setIsMoseHover] = useState(false)
+
+  const [isMouseHover, setIsMouseHover] = useState(false)
   const handleSetTrack = (event) => {
     event.stopPropagation()
     if (isPlaying) { togglePlayback() }
@@ -28,8 +29,8 @@ function CollectionCard(props: CollectionCardProps) {
     <div
       className="m-4 flex rounded-md p-6 bg-gray-50 bg-opacity-10 items-center cursor-pointer hover:bg-gray-50 transform hover:scale-101 transition duration-300 ease-in-out"
       onClick={handleNavigateToSongPage}
-      onMouseEnter={() => setIsMoseHover(true)}
-      onMouseLeave={() => setIsMoseHover(false)}
+      onMouseEnter={() => setIsMouseHover(true)}
+      onMouseLeave={() => setIsMouseHover(false)}
       style={{ width: 450 }}
     >
       <div

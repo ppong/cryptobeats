@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import CollectionCard from "../../components/collection.card";
 import { Track } from "../../components/context/application";
+import { getTracksFromCollectibles } from "../../components/track";
 import { CollectionQuery } from "../../graphql/queries";
 
 export const mockData: Track[] = [
@@ -45,24 +46,8 @@ function CollectionPage() {
 
   useEffect(() => {
     if (!data) { return }
-    const promises: Promise<any>[] = data.user.collection.map((collectible) => {
-      return fetch(collectible.metadataURI).then((res) => res.json())
-    })
-    Promise.all(promises).then((rawMetadata) => {
-      const tracks: Track[] = rawMetadata.map((metadata, index) => {
-        return {
-          albumCoverUrl: metadata.body?.artwork?.info?.uri,
-          artist: metadata.body?.artist,
-          description: metadata.body?.notes,
-          title: metadata.body?.title,
-          mediaUrl: data.user.collection[index].contentURI
-        }
-      })
-      const validTracks = tracks.filter((track) => {
-        return track.albumCoverUrl && track.mediaUrl
-      })
-      // setTracks(validTracks.concat(validTracks).concat(validTracks).concat(validTracks))
-      setTracks(validTracks)
+    getTracksFromCollectibles(data.user.collection).then(tracks => {
+      setTracks(tracks)
     })
   }, [data])
 

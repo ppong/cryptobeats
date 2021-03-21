@@ -37,6 +37,7 @@ export interface Track {
   description: string
   albumCoverUrl: string
   mediaUrl: string
+  duration?: string
 }
 
 interface IAppContext {

@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import CollectionCard from "../../components/collection.card";
 import { Track } from "../../components/context/application";
+import { CollectionQuery } from "../../graphql/queries";
 
 export const mockData: Track[] = [
   {
@@ -34,22 +35,12 @@ export const mockData: Track[] = [
   },
 ];
 
-const ExampleGraphqlQuery = gql`
-{
-  user(id: "0x47fb2aa5a070ded6f6e2414c601d7a80532dbb17") {
-    collection {
-      id
-      creator {
-        id
-      }
-      contentURI
-      metadataURI
-    }
-  }
-}`
-
 function CollectionPage() {
-  const { loading, error, data } = useQuery(ExampleGraphqlQuery);
+  const { loading, error, data } = useQuery(CollectionQuery, {
+    variables: {
+      'address': '0x47fb2aa5a070ded6f6e2414c601d7a80532dbb17'
+    }
+  });
   const [tracks, setTracks] = useState<Track[]>([])
 
   useEffect(() => {

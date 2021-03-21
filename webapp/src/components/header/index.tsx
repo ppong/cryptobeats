@@ -53,20 +53,20 @@ function Header() {
 
   return (
     <div className="absolute top-0 flex justify-between w-full h-20 p-4 items-center z-10">
-      <Link to="/home">
+      <Link to="/listen">
         <div className="flex justify-center items-center">
           <img className="h-8 w-auto sm:h-10" src="https://logoipsum.com/logo/logo-14.svg" alt="logo" />
           <h1 className="-ml-2 text-sm text-gray-50 font-semibold">CRYPTOBEATS</h1>
         </div>
       </Link>
       <div className='text-gray-400 space-x-8'>
-        <NavLink
+        {/* <NavLink
           className='py-2'
           activeClassName='text-gray-50 border-b-2 border-white'
           to='/home'
         >
           Home
-        </NavLink>
+        </NavLink> */}
         <NavLink
           className='py-2'
           activeClassName='text-gray-50 border-b-2 border-white'

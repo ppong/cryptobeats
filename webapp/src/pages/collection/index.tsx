@@ -73,7 +73,7 @@ function CollectionPage() {
             Playlists
           </a>
           <a className='text-lg text-gray-300'>
-            Albumns
+            Albums
           </a>
         </div>
         <div className='flex items-center w-full h-full overflow-x-auto'>
